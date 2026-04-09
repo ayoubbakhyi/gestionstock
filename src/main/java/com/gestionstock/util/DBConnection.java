@@ -1,0 +1,56 @@
+package com.gestionstock.util;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class DBConnection {
+
+    private static final String DB_PATH = System.getProperty("user.dir") + "/gestion-stock.db";
+    private static final String URL = "jdbc:sqlite:" + DB_PATH;
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL);
+    }
+
+    public static void init() {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id       INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name     TEXT NOT NULL,
+                    email    TEXT NOT NULL,
+                    password TEXT NOT NULL
+                )
+            """);
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS categories (
+                    id   INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL
+                )
+            """);
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS products (
+                    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name        TEXT NOT NULL,
+                    quantity    INTEGER NOT NULL DEFAULT 0,
+                    price       REAL NOT NULL DEFAULT 0,
+                    category_id INTEGER REFERENCES categories(id),
+                    created_at  TEXT DEFAULT (datetime('now'))
+                )
+            """);
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS logs (
+                    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username   TEXT NOT NULL,
+                    action     TEXT NOT NULL,
+                    url        TEXT NOT NULL,
+                    created_at TEXT DEFAULT (datetime('now'))
+                )
+            """);
+        } catch (SQLException e) {
+            throw new RuntimeException("DB init failed", e);
+        }
+    }
+}
