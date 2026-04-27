@@ -4,148 +4,149 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Catégories — Gestion de Stock</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: sans-serif; background: #f0f2f5; }
-
-        header {
-            background: #4f46e5; color: white;
-            padding: 1rem 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        header a { color: white; text-decoration: none; font-size: .9rem; opacity: .85; }
-        header a:hover { opacity: 1; }
-
-        main { padding: 2rem; max-width: 700px; margin: 0 auto; }
-
-        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; }
-        .toolbar form { display: flex; gap: .5rem; }
-        input[type=text], select {
-            padding: .55rem .75rem; border: 1px solid #ccc; border-radius: 4px; font-size: .9rem;
-        }
-        button, .btn {
-            padding: .55rem 1rem; border: none; border-radius: 4px;
-            font-size: .9rem; cursor: pointer;
-        }
-        .btn-primary { background: #4f46e5; color: white; }
-        .btn-primary:hover { background: #4338ca; }
-        .btn-danger { background: #ef4444; color: white; }
-        .btn-danger:hover { background: #dc2626; }
-        .btn-secondary { background: #e5e7eb; color: #333; }
-        .btn-secondary:hover { background: #d1d5db; }
-
-        table { width: 100%; border-collapse: collapse; background: white;
-                border-radius: 8px; overflow: hidden;
-                box-shadow: 0 2px 8px rgba(0,0,0,.08); }
-        th { background: #4f46e5; color: white; padding: .75rem 1rem; text-align: left; font-size: .85rem; }
-        td { padding: .75rem 1rem; font-size: .9rem; border-bottom: 1px solid #f0f0f0; }
-        tr:last-child td { border-bottom: none; }
-        .empty { text-align: center; color: #aaa; padding: 2rem; }
-
-        .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); justify-content: center; align-items: center; z-index: 10; }
-        .modal-bg.open { display: flex; }
-        .modal { background: white; border-radius: 8px; padding: 1.5rem; width: 360px; }
-        .modal h3 { margin-bottom: 1rem; }
-        .modal label { display: block; margin: .75rem 0 .25rem; font-size: .85rem; color: #555; }
-        .modal input { width: 100%; }
-        .modal-footer { display: flex; justify-content: flex-end; gap: .5rem; margin-top: 1.25rem; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Categories — Gestion de Stock</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 </head>
 <body>
-
-<header>
-    <span><strong>Gestion de Stock</strong> — Catégories</span>
-    <div style="display:flex;gap:1.5rem">
-        <a href="dashboard">← Tableau de bord</a>
-        <a href="logout">Déconnexion</a>
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <div class="container">
+        <a class="navbar-brand fs-4" href="dashboard">Gestion de Stock</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#categoriesNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="categoriesNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="dashboard">Tableau de bord</a></li>
+                <li class="nav-item"><a class="nav-link" href="products">Produits</a></li>
+                <li class="nav-item"><a class="nav-link active" href="categories">Categories</a></li>
+                <li class="nav-item"><a class="nav-link" href="alerts">Alertes</a></li>
+                <li class="nav-item"><a class="nav-link" href="logs">Logs</a></li>
+            </ul>
+            <a href="logout" class="btn btn-outline-danger btn-sm fw-semibold">Deconnexion</a>
+        </div>
     </div>
-</header>
+</nav>
 
-<main>
-    <div class="toolbar">
-        <form method="get" action="categories">
-            <input type="text" name="q" value="${q}" placeholder="Rechercher une catégorie…" style="width:220px"/>
-            <button type="submit" class="btn-primary">Rechercher</button>
-            <c:if test="${not empty q}">
-                <a href="categories" class="btn btn-secondary">Effacer</a>
-            </c:if>
-        </form>
-        <button class="btn btn-primary" onclick="openAdd()">+ Ajouter</button>
+<main class="container py-4 py-lg-5 fade-in">
+    <div class="card fade-in delay-1">
+        <div class="card-body p-4">
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+                <div>
+                    <h1 class="h4 mb-1 fw-bold text-primary">Categories</h1>
+                    <p class="text-body-secondary mb-0">Organisez le catalogue par famille de produits.</p>
+                </div>
+                <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-lg-auto">
+                    <form method="get" action="categories" class="d-flex gap-2 flex-grow-1">
+                        <input type="text" name="q" value="${q}" class="form-control" placeholder="Rechercher une categorie…">
+                        <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+                    </form>
+                    <div class="d-flex gap-2">
+                        <c:if test="${not empty q}">
+                            <a href="categories" class="btn btn-outline-secondary">Effacer</a>
+                        </c:if>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:choose>
+                        <c:when test="${empty categories}">
+                            <tr><td colspan="3" class="text-center text-body-secondary py-4">Aucune categorie trouvee.</td></tr>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="cat" items="${categories}">
+                                <tr>
+                                    <td>${cat.id}</td>
+                                    <td>${cat.name}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm"
+                                                data-id="${cat.id}"
+                                                data-name="<c:out value='${cat.name}'/>"
+                                                onclick="openEditFromButton(this)">
+                                                Modifier
+                                            </button>
+                                            <form method="post" action="categories" onsubmit="return confirm('Supprimer ?')">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="id" value="${cat.id}">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-
-    <table>
-        <thead>
-            <tr><th>#</th><th>Nom</th><th>Actions</th></tr>
-        </thead>
-        <tbody>
-            <c:choose>
-                <c:when test="${empty categories}">
-                    <tr><td colspan="3" class="empty">Aucune catégorie trouvée.</td></tr>
-                </c:when>
-                <c:otherwise>
-                    <c:forEach var="cat" items="${categories}">
-                        <tr>
-                            <td>${cat.id}</td>
-                            <td>${cat.name}</td>
-                            <td style="display:flex;gap:.5rem">
-                                <button class="btn btn-secondary" onclick="openEdit(${cat.id},'${cat.name}')">Modifier</button>
-                                <form method="post" action="categories" onsubmit="return confirm('Supprimer ?')">
-                                    <input type="hidden" name="action" value="delete"/>
-                                    <input type="hidden" name="id" value="${cat.id}"/>
-                                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </c:otherwise>
-            </c:choose>
-        </tbody>
-    </table>
 </main>
 
-<!-- Add Modal -->
-<div id="addModal" class="modal-bg">
-    <div class="modal">
-        <h3>Ajouter une catégorie</h3>
-        <form method="post" action="categories">
-            <input type="hidden" name="action" value="add"/>
-            <label>Nom</label>
-            <input type="text" name="name" required/>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModals()">Annuler</button>
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-            </div>
-        </form>
+<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="categories">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5">Ajouter une categorie</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="add">
+                    <label class="form-label" for="addCategoryName">Nom</label>
+                    <input id="addCategoryName" type="text" name="name" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<!-- Edit Modal -->
-<div id="editModal" class="modal-bg">
-    <div class="modal">
-        <h3>Modifier la catégorie</h3>
-        <form method="post" action="categories">
-            <input type="hidden" name="action" value="edit"/>
-            <input type="hidden" name="id" id="editId"/>
-            <label>Nom</label>
-            <input type="text" name="name" id="editName" required/>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModals()">Annuler</button>
-                <button type="submit" class="btn btn-primary">Enregistrer</button>
-            </div>
-        </form>
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="categories">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5">Modifier la categorie</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="edit">
+                    <input type="hidden" name="id" id="editId">
+                    <label class="form-label" for="editName">Nom</label>
+                    <input type="text" name="name" id="editName" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    function openAdd() { document.getElementById('addModal').classList.add('open'); }
-    function openEdit(id, name) {
-        document.getElementById('editId').value = id;
-        document.getElementById('editName').value = name;
-        document.getElementById('editModal').classList.add('open');
-    }
-    function closeModals() {
-        document.querySelectorAll('.modal-bg').forEach(m => m.classList.remove('open'));
+    function openEditFromButton(button) {
+        document.getElementById('editId').value = button.dataset.id;
+        document.getElementById('editName').value = button.dataset.name;
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('editModal')).show();
     }
 </script>
 </body>

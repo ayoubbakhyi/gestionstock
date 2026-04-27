@@ -4,39 +4,45 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Connexion — Gestion de Stock</title>
-    <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 80px; background: #f0f2f5; }
-        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.1); width: 360px; }
-        h2 { margin-top: 0; }
-        label { display: block; margin: 1rem 0 .3rem; font-size: .9rem; color: #555; }
-        input { width: 100%; padding: .6rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 1rem; }
-        button { margin-top: 1.5rem; width: 100%; padding: .75rem; background: #4f46e5; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
-        button:hover { background: #4338ca; }
-        .error { color: red; margin-top: .5rem; font-size: .9rem; }
-        .footer { margin-top: 1rem; text-align: center; font-size: .9rem; }
-        a { color: #4f46e5; }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 </head>
-<body>
-<div class="card">
-    <h2>Connexion</h2>
+<body class="auth-bg">
+<div class="auth-content fade-in">
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center py-5">
+        <div class="card glass-card border-0 w-100" style="max-width: 420px;">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h1 class="h3 mb-1 fw-bold text-primary">Connexion</h1>
+                    <p class="text-body-secondary mb-0">Accedez a votre espace de gestion.</p>
+                </div>
 
-    <c:if test="${not empty error}">
-        <p class="error">${error}</p>
-    </c:if>
+                <c:if test="${not empty error}">
+                    <div class="alert alert-danger" role="alert">${error}</div>
+                </c:if>
 
-    <form method="post" action="login">
-        <label>Email</label>
-        <input type="email" name="email" placeholder="email@exemple.com" />
+                <form method="post" action="login" class="vstack gap-3">
+                    <div>
+                        <label for="email" class="form-label text-secondary fw-semibold">Email</label>
+                        <input id="email" type="email" name="email" class="form-control" placeholder="email@exemple.com" required>
+                    </div>
 
-        <label>Mot de passe</label>
-        <input type="password" name="password" placeholder="••••••••" />
+                    <div>
+                        <label for="password" class="form-label text-secondary fw-semibold">Mot de passe</label>
+                        <input id="password" type="password" name="password" class="form-control" placeholder="••••••••" required>
+                    </div>
 
-        <button type="submit">Se connecter</button>
-    </form>
+                    <button type="submit" class="btn btn-primary w-100 mt-2 py-2">Se connecter</button>
+                </form>
 
-    <p class="footer">Pas encore de compte ? <a href="signup">S'inscrire</a></p>
+                <p class="text-center text-body-secondary mt-4 mb-0">
+                    Pas encore de compte ? <a href="signup" class="text-decoration-none fw-semibold">S'inscrire</a>
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

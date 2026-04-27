@@ -49,6 +49,7 @@ public class DBConnection {
                     created_at TEXT DEFAULT (datetime('now'))
                 )
             """);
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)");
         } catch (SQLException e) {
             throw new RuntimeException("DB init failed", e);
         }

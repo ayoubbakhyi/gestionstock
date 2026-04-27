@@ -4,100 +4,102 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tableau de bord — Gestion de Stock</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: sans-serif; background: #f0f2f5; }
-
-        header {
-            background: #4f46e5; color: white;
-            padding: 1rem 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        header h1 { font-size: 1.2rem; }
-        header span { font-size: .9rem; opacity: .85; }
-
-        main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
-
-        .cards { display: flex; gap: 1.5rem; margin-bottom: 2rem; }
-        .card {
-            background: white; border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.08);
-            padding: 1.5rem; flex: 1; text-align: center;
-        }
-        .card .label { font-size: .85rem; color: #888; margin-bottom: .5rem; }
-        .card .value { font-size: 2.5rem; font-weight: 700; color: #4f46e5; }
-
-        h2 { margin-bottom: 1rem; font-size: 1.1rem; color: #333; }
-        table { width: 100%; border-collapse: collapse; background: white;
-                border-radius: 8px; overflow: hidden;
-                box-shadow: 0 2px 8px rgba(0,0,0,.08); }
-        th { background: #4f46e5; color: white; padding: .75rem 1rem; text-align: left; font-size: .85rem; }
-        td { padding: .75rem 1rem; font-size: .9rem; border-bottom: 1px solid #f0f0f0; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #fafafa; }
-        .empty { text-align: center; color: #aaa; padding: 2rem; }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 </head>
 <body>
-
-<header>
-    <h1>Gestion de Stock</h1>
-    <nav style="display:flex;gap:1.5rem;align-items:center">
-        <a href="products" style="color:white;text-decoration:none;font-size:.9rem">Produits</a>
-        <a href="categories" style="color:white;text-decoration:none;font-size:.9rem">Catégories</a>
-        <a href="alerts" style="color:white;text-decoration:none;font-size:.9rem">Alertes</a>
-        <a href="logs" style="color:white;text-decoration:none;font-size:.9rem">Logs</a>
-        <span style="font-size:.85rem;opacity:.75">Utilisateurs actifs : <strong>${applicationScope.activeUsers}</strong></span>
-        <a href="logout" style="color:white;text-decoration:none;font-size:.9rem;opacity:.85">Déconnexion</a>
-    </nav>
-</header>
-
-<main>
-    <div class="cards">
-        <div class="card">
-            <div class="label">Produits</div>
-            <div class="value">${productCount}</div>
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <div class="container">
+        <a class="navbar-brand fs-4" href="dashboard">Gestion de Stock</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" href="dashboard">Tableau de bord</a></li>
+                <li class="nav-item"><a class="nav-link" href="products">Produits</a></li>
+                <li class="nav-item"><a class="nav-link" href="categories">Categories</a></li>
+                <li class="nav-item"><a class="nav-link" href="alerts">Alertes</a></li>
+                <li class="nav-item"><a class="nav-link" href="logs">Logs</a></li>
+            </ul>
+            <div class="d-flex align-items-center gap-3">
+                <span class="small text-secondary fw-medium">Utilisateurs actifs : <strong class="text-primary">${applicationScope.activeUsers}</strong></span>
+                <a href="logout" class="btn btn-outline-danger btn-sm fw-semibold">Deconnexion</a>
+            </div>
         </div>
-        <div class="card">
-            <div class="label">Catégories</div>
-            <div class="value">${categoryCount}</div>
+    </div>
+</nav>
+
+<main class="container py-4 py-lg-5 fade-in">
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 fade-in delay-1">
+            <div class="card h-100 hover-elevate">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center py-5">
+                    <p class="text-secondary fw-bold text-uppercase tracking-wider mb-2">Produits</p>
+                    <div class="display-3 fw-bold gradient-text">${productCount}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 fade-in delay-2">
+            <div class="card h-100 hover-elevate">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center py-5">
+                    <p class="text-secondary fw-bold text-uppercase tracking-wider mb-2">Categories</p>
+                    <div class="display-3 fw-bold gradient-text">${categoryCount}</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <h2>10 derniers produits ajoutés</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Nom</th>
-                <th>Catégorie</th>
-                <th>Quantité</th>
-                <th>Prix</th>
-                <th>Ajouté le</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:choose>
-                <c:when test="${empty latestProducts}">
-                    <tr><td colspan="6" class="empty">Aucun produit pour l'instant.</td></tr>
-                </c:when>
-                <c:otherwise>
-                    <c:forEach var="p" items="${latestProducts}">
-                        <tr>
-                            <td>${p.id}</td>
-                            <td>${p.name}</td>
-                            <td>${empty p.categoryName ? '—' : p.categoryName}</td>
-                            <td>${p.quantity}</td>
-                            <td>${p.price} €</td>
-                            <td>${p.createdAt}</td>
-                        </tr>
-                    </c:forEach>
-                </c:otherwise>
-            </c:choose>
-        </tbody>
-    </table>
+    <div class="card fade-in delay-3">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h5 mb-0 fw-bold text-primary">10 derniers produits ajoutes</h2>
+                <a href="products" class="btn btn-primary btn-sm px-3">Voir tous les produits</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th class="text-secondary fw-semibold">#</th>
+                        <th class="text-secondary fw-semibold">Nom</th>
+                        <th class="text-secondary fw-semibold">Categorie</th>
+                        <th class="text-secondary fw-semibold">Quantite</th>
+                        <th class="text-secondary fw-semibold">Prix</th>
+                        <th class="text-secondary fw-semibold">Ajoute le</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:choose>
+                        <c:when test="${empty latestProducts}">
+                            <tr><td colspan="6" class="text-center text-body-secondary py-5">Aucun produit pour l'instant.</td></tr>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="p" items="${latestProducts}">
+                                <tr>
+                                    <td class="fw-medium">${p.id}</td>
+                                    <td class="fw-semibold text-dark">${p.name}</td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border">${empty p.categoryName ? '—' : p.categoryName}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge ${p.quantity > 10 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'}">${p.quantity}</span>
+                                    </td>
+                                    <td class="fw-semibold">${p.price} €</td>
+                                    <td class="text-secondary small">${p.createdAt}</td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
