@@ -1,17 +1,19 @@
 package com.gestionstock.util;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.sqlite.SQLiteDataSource;
 
 public class DBConnection {
 
-    private static final String DB_PATH = System.getProperty("user.dir") + "/gestion-stock.db";
+    private static final String DB_PATH = "/home/ayoub/Documents/project-school/gestion-stock.db";
     private static final String URL = "jdbc:sqlite:" + DB_PATH;
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL);
+        SQLiteDataSource ds = new SQLiteDataSource();
+        ds.setUrl(URL);
+        return ds.getConnection();
     }
 
     public static void init() {
