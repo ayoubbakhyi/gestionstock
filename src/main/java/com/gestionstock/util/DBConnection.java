@@ -7,7 +7,7 @@ import org.sqlite.SQLiteDataSource;
 
 public class DBConnection {
 
-    private static final String DB_PATH = "/home/ayoub/Documents/project-school/gestion-stock.db";
+    private static final String DB_PATH = System.getProperty("user.dir") + "/gestion-stock.db";
     private static final String URL = "jdbc:sqlite:" + DB_PATH;
 
     public static Connection getConnection() throws SQLException {
